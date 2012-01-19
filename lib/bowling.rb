@@ -13,27 +13,44 @@ class Bowling
   def score
     while @rolls.length > 0
       @frames += 1
-      roll_one = @rolls.slice!(0) # every frame has at least one roll
-      if roll_one == 10 then # strike!
-        if (@frames == 10) then # strike in last frame, score and delete bonus rolls
-          @score += (roll_one + @rolls.slice!(0) + @rolls.slice!(0)) 
-        else
-          @score += (roll_one + @rolls[0] + @rolls[1])
-          @frames += 1
-          next # no more rolls in frame.  Advance to next execution.
-        end
+      if @frames == 10 then
+        handle_last_frame
         next
       end
-      roll_two = @rolls.slice!(0) # if not strike, then frame had second roll
+      
+      roll_one = @rolls.slice!(0)
+      
+      if roll_one == 10 then
+        handle_strike roll_one
+        next
+      end
+      
+      roll_two = @rolls.slice!(0)
       @score += (roll_one + roll_two)
-      if (roll_one + roll_two == 10) then # spare!
-        if (@frames == 10) then # spare in last frame, score and delete bonus roll
-          @score += @rolls.slice!(0)
-        else
-          @score += @rolls[0]
-        end
+      if (roll_one + roll_two == 10) then
+        handle_spare
       end
     end
     @score
+  end
+  
+  def handle_last_frame
+    roll_one = @rolls.slice!(0)
+    if roll_one == 10 then
+        @score += (roll_one + @rolls.slice!(0) + @rolls.slice!(0)) 
+        return
+    end
+    roll_two = @rolls.slice!(0)
+    @score += (roll_one + roll_two)
+    if (roll_one + roll_two == 10) then
+      @score += @rolls.slice!(0)
+    end
+  end
+  
+  def handle_spare
+    @score += @rolls[0]
+  end
+  def handle_strike roll_one
+    @score += (roll_one + @rolls[0] + @rolls[1])
   end
 end

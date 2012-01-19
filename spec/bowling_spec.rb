@@ -1,7 +1,7 @@
 require 'bowling'
 
 describe Bowling do
-
+  
   it "scores a zero when all zeroes are rolled" do
     10.times do frame(0, 0) end
 	  subject.score.should == 0
